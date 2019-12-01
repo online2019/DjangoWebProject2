@@ -1,0 +1,32 @@
+﻿{% extends "app/layout.html" %}
+
+{% block content %}
+<p><a href="{% url 'blog' %}">Назад</a> </p>
+<h2> {{ zakaz.title_b }} </h2>
+<h5> {{ zakaz.kol}}</h5>
+
+{% autoescape off %}
+<p> {{ zakaz.content_b|linebreaksbr }} </p>    {# вывод текста по абзацам#}
+{% endautoescape %}
+{% if user.is_authenticated %}
+    <h3>Добавить комментарий</h3>
+    <form method="POST" >{% csrf_token %}  {# обязательная защита от атак CSRF#}
+    <div>
+        {{ form.as_p }} 
+        <button type="submit" class="save btn btn-default" > Отправить комментарий </button>
+    </div>
+    </form>
+{% else %}
+    <h3>Для добавления своего комментария, пожалуйста, <a href="{% url 'login' %}">авторизуйтесь</a> или <a href="{% url 'registration' %}">зарегистрируйтесь</a></h3>
+{% endif %}
+<div> {{number}}</div> # вывод количества комментариев)))
+
+{%  for comment in comments  %}
+<hr/>
+<h4> {{ comment.date }} </h4>
+<h5> {{ comment.author }} </h5>
+<p> {{ comment.text|linebreaksbr }} </p>
+{%  endfor %}
+
+
+{% endblock %}
